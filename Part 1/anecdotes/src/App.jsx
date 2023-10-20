@@ -20,13 +20,30 @@ const App = () => {
     tempVote[selected]=tempVote[selected]+1
     setVote(tempVote)
   }
+  const findLargestNumberAndPosition=()=> {
+    let largestNumber = vote[0];
+    let position = 0;
+
+    for (let i = 0; i < 8; i++) {
+        if (vote[i] > largestNumber) {
+            largestNumber = vote[i];
+            position = i;
+        }
+    }
+
+    return position ;
+}
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <p>has {vote[selected]} votes</p>
       <div>
         <button onClick={handleVote}>vote</button>
       <button onClick={()=>{setSelected(Math.floor(Math.random() * (7 - 0 + 1)) + 0)}}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[findLargestNumberAndPosition()]}</p>
+      <p>has {vote[findLargestNumberAndPosition()]} votes</p>
       </div>
     </div>
   )
