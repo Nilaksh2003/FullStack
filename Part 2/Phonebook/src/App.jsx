@@ -5,8 +5,14 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const handleFormSubmit=(event)=>{
     event.preventDefault()
-    setPersons(persons.concat(newName))
-    setNewName('')
+    if(!persons.includes(newName))
+    {
+      setPersons(persons.concat(newName))
+      setNewName('')
+    }
+    else{
+      alert(`${newName} is already added to phonebook`)
+    }
   }
   return (
     <div>
