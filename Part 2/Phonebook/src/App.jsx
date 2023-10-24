@@ -7,10 +7,10 @@ const Filter=({newFilter,setNewFilter})=>{
         </div>
   )
 }
-const Persons=({persons})=>{
+const Persons=({persons,deletePhoneNumber})=>{
   return(
     <>
-    {persons.map((person,i)=><p key={i}>{person.name} {person.number}</p>)}
+    {persons.map((person,i)=><p key={i}>{person.name} {person.number}<button onClick={()=>{deletePhoneNumber(person)}}>Delete</button></p>)}
     </>
   )
 }
@@ -35,7 +35,7 @@ const App = () => {
   const [newNumber,setNewNumber]=useState('')
   const[newFilter,setNewFilter]=useState('')
   useEffect(()=>{
-    phoneServices.getAll()
+    phoneServices.getAllPhoneNumber()
     .then((initialPhoneNumbers)=>{
       setPersons(initialPhoneNumbers)
     })
@@ -45,7 +45,7 @@ const App = () => {
     event.preventDefault()
     if(!persons.some(person=>person.name===newName))
     {
-      phoneServices.create({name:newName,number:newNumber})
+      phoneServices.createPhoneNumber({name:newName,number:newNumber})
       .then((response)=>{
         setPersons(persons.concat(response))
         setNewName('')
@@ -56,6 +56,21 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     }
   }
+  const deletePhoneNumber=(person)=>{
+    if(window.confirm(`Delete ${person.name} ?`))
+    {
+      phoneServices.deletePhoneNumber(person.id)
+      .then((response)=>{
+        if(response='OK')
+        {
+          phoneServices.getAllPhoneNumber()
+          .then((initialPhoneNumbers)=>{
+           setPersons(initialPhoneNumbers)
+          })
+        }
+      })
+    }
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -63,7 +78,7 @@ const App = () => {
       <h3>add a new</h3>
       <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleFormSubmit={handleFormSubmit}  />
       <h3>Numbers</h3>
-      <Persons persons={personToShow} />
+      <Persons persons={personToShow} deletePhoneNumber={deletePhoneNumber} />
     </div>
   )
 }
