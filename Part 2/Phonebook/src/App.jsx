@@ -8,6 +8,7 @@ const Filter=({newFilter,setNewFilter})=>{
   )
 }
 const Persons=({persons,deletePhoneNumber})=>{
+  console.log(persons)
   return(
     <>
     {persons.map((person,i)=><p key={i}>{person.name} {person.number}<button onClick={()=>{deletePhoneNumber(person)}}>Delete</button></p>)}
@@ -53,7 +54,20 @@ const App = () => {
       })
     }
     else{
-      alert(`${newName} is already added to phonebook`)
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with new one?`))
+      {
+        const person = persons.find(person=>person.name===newName)
+        const changedPerson={...person , number:newNumber}
+        setNewName('')
+        setNewNumber('')
+        phoneServices.updatePhoneNumber(changedPerson)
+        .then((response)=>{
+          setPersons(persons.map((person)=>{
+            return person.id!==response.id?person:response
+          })
+          )
+        })
+      }
     }
   }
   const deletePhoneNumber=(person)=>{

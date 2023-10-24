@@ -18,5 +18,12 @@ const deletePhoneNumber=(id)=>{
         return response.statusText
     })
 }
+const updatePhoneNumber = (person) => {
+    const url = `${baseUrl}/${person.id}`
+    const request =axios.put(url,person)
+    return request.then((response)=>{
+        return response.data
+    })
+  }
 
-export default{getAllPhoneNumber,createPhoneNumber,deletePhoneNumber}
+export default{getAllPhoneNumber,createPhoneNumber,deletePhoneNumber,updatePhoneNumber}
