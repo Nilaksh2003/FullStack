@@ -7,8 +7,8 @@ const Notification=({message})=>{
     return null
   }
   return(
-    <div className='success'>
-      {message}
+    <div className={message.type}>
+      {message.message}
     </div>
   )
 }
@@ -77,7 +77,7 @@ const App = () => {
         })
       }
     }
-        setMessage(`Added ${newName}`)
+        setMessage({type:'success',message:`Added ${newName}`})
         setNewName('')
         setNewNumber('')
         setTimeout(()=>{setMessage(null)},5000);
@@ -94,6 +94,14 @@ const App = () => {
            setPersons(initialPhoneNumbers)
           })
         }
+      })
+      .catch(error=>{
+        setMessage(
+          {type:'error',message:`Information '${person.name}' was already removed from server`}
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
     }
   }
