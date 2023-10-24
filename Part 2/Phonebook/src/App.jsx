@@ -1,5 +1,17 @@
 import { useState,useEffect } from 'react'
 import phoneServices from './services/PhoneNumber'
+import './index.css'
+const Notification=({message})=>{
+  if(message===null)
+  {
+    return null
+  }
+  return(
+    <div className='success'>
+      {message}
+    </div>
+  )
+}
 const Filter=({newFilter,setNewFilter})=>{
   return(
         <div>
@@ -8,7 +20,6 @@ const Filter=({newFilter,setNewFilter})=>{
   )
 }
 const Persons=({persons,deletePhoneNumber})=>{
-  console.log(persons)
   return(
     <>
     {persons.map((person,i)=><p key={i}>{person.name} {person.number}<button onClick={()=>{deletePhoneNumber(person)}}>Delete</button></p>)}
@@ -35,6 +46,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber,setNewNumber]=useState('')
   const[newFilter,setNewFilter]=useState('')
+  const[message,setMessage]=useState(null)
   useEffect(()=>{
     phoneServices.getAllPhoneNumber()
     .then((initialPhoneNumbers)=>{
@@ -49,8 +61,6 @@ const App = () => {
       phoneServices.createPhoneNumber({name:newName,number:newNumber})
       .then((response)=>{
         setPersons(persons.concat(response))
-        setNewName('')
-        setNewNumber('')
       })
     }
     else{
@@ -58,8 +68,6 @@ const App = () => {
       {
         const person = persons.find(person=>person.name===newName)
         const changedPerson={...person , number:newNumber}
-        setNewName('')
-        setNewNumber('')
         phoneServices.updatePhoneNumber(changedPerson)
         .then((response)=>{
           setPersons(persons.map((person)=>{
@@ -69,6 +77,10 @@ const App = () => {
         })
       }
     }
+        setMessage(`Added ${newName}`)
+        setNewName('')
+        setNewNumber('')
+        setTimeout(()=>{setMessage(null)},5000);
   }
   const deletePhoneNumber=(person)=>{
     if(window.confirm(`Delete ${person.name} ?`))
@@ -88,6 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
       <h3>add a new</h3>
       <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} handleFormSubmit={handleFormSubmit}  />
