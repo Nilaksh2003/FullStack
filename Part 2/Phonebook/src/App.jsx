@@ -62,6 +62,9 @@ const App = () => {
       .then((response)=>{
         setPersons(persons.concat(response))
       })
+      .catch(error=>{
+        setMessage({type:'error',message:error.response.data.error})
+      })
     }
     else{
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with new one?`))
@@ -74,6 +77,9 @@ const App = () => {
             return person.id!==response.id?person:response
           })
           )
+        })
+        .catch(error=>{
+          setMessage({type:'error',message:error.response.data.error})
         })
       }
     }
